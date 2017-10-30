@@ -1,5 +1,8 @@
 package chapter1;
 
+import chapter2.ServletProcessor;
+import chapter2.StaticResourceProcessor;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -45,7 +48,18 @@ public class HttpServer {
                 request.parse();
                 Response response=new Response(outputStream);
                 response.setRequest(request);
-                response.sendStaticResource();
+
+//                response.sendStaticResource();
+
+                if (request.getUri().startsWith("servlet/")){
+                    ServletProcessor processor=new ServletProcessor();
+                    processor.process(request,response);
+                }else {
+                    StaticResourceProcessor processor=new StaticResourceProcessor();
+                    processor.process(request,response);
+                }
+
+
                 socket.close();
                 isShutdown=request.getUri().equals(SHUTDOWN);
             }catch (Exception e){

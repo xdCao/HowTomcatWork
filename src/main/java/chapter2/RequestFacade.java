@@ -1,63 +1,26 @@
-package chapter1;
+package chapter2;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
-
 /**
  * created by xdCao on 2017/10/30
  */
 
-public class Request implements ServletRequest {
+public class RequestFacade implements ServletRequest {
 
-    private InputStream inputStream;
-    private String uri;
+    private ServletRequest request=null;
 
-    public Request(InputStream inputStream) {
-        this.inputStream=inputStream;
+    public RequestFacade(ServletRequest request) {
+        this.request = request;
     }
 
-    public void parse() {
-        StringBuffer request=new StringBuffer(2048);
-        int i;
-        byte[] buffer=new byte[2048];
-        try {
-            i=inputStream.read(buffer);
-        }catch (Exception e){
-            e.printStackTrace();
-            i=-1;
-        }
-        for (int j=0;j<i;j++){
-            request.append((char)buffer[j]);
-        }
-        System.out.print(request.toString());
-        uri=parseUri(request.toString());
-    }
-
-    private String parseUri(String requestString){
-        int index1,index2;
-        index1=requestString.indexOf(' ');
-        if (index1!=-1){
-            index2=requestString.indexOf(' ',index1+1);
-            if (index2>index1){
-                return requestString.substring(index1+2,index2);
-            }
-        }
-        return null;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public Object getAttribute(String s) {
+    public Object getAttribute(String name) {
         return null;
     }
 
@@ -69,7 +32,7 @@ public class Request implements ServletRequest {
         return null;
     }
 
-    public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
+    public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
 
     }
 
@@ -89,7 +52,7 @@ public class Request implements ServletRequest {
         return null;
     }
 
-    public String getParameter(String s) {
+    public String getParameter(String name) {
         return null;
     }
 
@@ -97,7 +60,7 @@ public class Request implements ServletRequest {
         return null;
     }
 
-    public String[] getParameterValues(String s) {
+    public String[] getParameterValues(String name) {
         return new String[0];
     }
 
@@ -133,11 +96,11 @@ public class Request implements ServletRequest {
         return null;
     }
 
-    public void setAttribute(String s, Object o) {
+    public void setAttribute(String name, Object o) {
 
     }
 
-    public void removeAttribute(String s) {
+    public void removeAttribute(String name) {
 
     }
 
@@ -153,11 +116,11 @@ public class Request implements ServletRequest {
         return false;
     }
 
-    public RequestDispatcher getRequestDispatcher(String s) {
+    public RequestDispatcher getRequestDispatcher(String path) {
         return null;
     }
 
-    public String getRealPath(String s) {
+    public String getRealPath(String path) {
         return null;
     }
 
